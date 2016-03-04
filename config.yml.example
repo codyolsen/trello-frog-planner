@@ -1,0 +1,14 @@
+trello:
+  app_key: ""
+  app_token: ""
+  board: ""
+  lists:
+    done: ""
+    today: ""
+    tomorrow: ""
+    week: ""
+    next_week: ""
+    month: ""
+    next_month: ""
+    year: ""
+    next_year: ""
