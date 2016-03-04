@@ -32,7 +32,7 @@ config['trello']['lists'].each do | list |
 end
 
 # Date Ranges
-@today = Time.now.beginning_of_week(:sunday)
+@today = Time.now.beginning_of_day
 @tomorrow = @today.tomorrow
 @week = (@today.beginning_of_week(:sunday) .. @today.end_of_week(:sunday))
 @next_week = (@week.begin + 1.week .. @week.end + 1.week)
