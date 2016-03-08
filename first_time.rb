@@ -7,6 +7,15 @@ Bundler.require :default
 require 'yaml'
 
 # Check for an exisitng config.yml file and ask for overrite or cancel
+if File.exist?('config.yml')
+  puts "Looks like you already have an existing config.yml file."
+  puts "This script will erase the existing config.yml and create a new one."
+  puts "Should we continue? Y/N"
+  continue = gets.chomp.upcase
+  if continue[0] != "Y"
+    abort
+  end
+end
 
 # Ask for their Trello Secret and App Token
 # Store it in config hash
