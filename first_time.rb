@@ -18,6 +18,11 @@ if File.exist?('config.yml')
 end
 
 # Ask for their Trello Secret and App Token
+puts "Trello Secret?"
+trello_secret = gets.chomp
+puts "Trello App Token?"
+trello_token = gets.chomp
+
 # Store it in config hash
 
 # Double check that it is in fact a proper connection
