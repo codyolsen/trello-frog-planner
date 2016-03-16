@@ -28,11 +28,22 @@ trello_token = gets.chomp
 # Double check that it is in fact a proper connection
 
 # Ask what the new board name should be or if they should use an existing board
+puts "Would you like to create a new board or use an existing one?"
+puts "1: New Board"
+puts "2: Existing Board"
+board_option = gets.chomp.to_i
 
-  # If new board create it and set board ID and mark flag for new board.
-  # If existing board display a list of all their boards and give them an integer select
-    # Give/get selection
-    # create new board and set ID
+# If new board create it and set board ID and mark flag for new board.
+if board_option == 1
+  puts "New Board Name?"
+  board_name = gets.chomp
+  
+
+# If existing board display a list of all their boards and give them an integer select
+else
+  # Give/get selection
+  # create new board and set ID
+end
 
 # Using board id create the new lists.
 # Retrieve their ID's in file for generating config hash.
