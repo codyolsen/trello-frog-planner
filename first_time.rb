@@ -1,10 +1,10 @@
 require 'rubygems'
 require 'bundler/setup'
 Bundler.require :default
+require 'trello'
+require 'yaml'
 
 # TRELLO-FROG-PLANNER SETUP SCRIPT
-# Load config.yml
-require 'yaml'
 
 # Check for an exisitng config.yml file and ask for overrite or cancel
 if File.exist?('config.yml')
@@ -18,14 +18,19 @@ if File.exist?('config.yml')
 end
 
 # Ask for their Trello Secret and App Token
-puts "Trello Secret?"
-trello_secret = gets.chomp
+puts "Trello API Key?"
+trello_key = gets.chomp
 puts "Trello App Token?"
 trello_token = gets.chomp
 
-# Store it in config hash
-
 # Double check that it is in fact a proper connection
+Trello.configure do | configure |
+  configure.developer_public_key = trello_key
+  configure.member_token = trello_token
+end
+
+# Store it in config hash
+config = {trello_key: trello_key, trello_token: trello_token}
 
 # Ask what the new board name should be or if they should use an existing board
 puts "Would you like to create a new board or use an existing one?"
