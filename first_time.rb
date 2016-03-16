@@ -18,6 +18,9 @@ if File.exist?('config.yml')
 end
 
 # Ask for their Trello Secret and App Token
+# Trello.open_public_key_url                         # copy your public key
+# Trello.open_authorization_url key: 'yourpublickey' # copy your member token
+
 puts "Trello API Key?"
 trello_key = gets.chomp
 puts "Trello App Token?"
