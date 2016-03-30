@@ -7,3 +7,8 @@ TODOS:
     - Explain system and include diagram
   - Add initialization script for setting up trello from scratch
   - Add nightly task with cron or other scheduler
+
+IDEAS:
+  - Reoccuring cards
+    - Perhaps an additional board that stores template cards to be added every x days
+  - End of period reports, such as nightly, weekly, monthly, etc.
