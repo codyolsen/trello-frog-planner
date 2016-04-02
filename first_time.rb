@@ -45,7 +45,7 @@ board_option = gets.chomp.to_i
 if board_option == 1
   puts "New Board Name?"
   board_name = gets.chomp
-  
+  board = Board.create(name: board_name)
 
 # If existing board display a list of all their boards and give them an integer select
 else
@@ -53,9 +53,12 @@ else
   # create new board and set ID
 end
 
+list = List.create(name: "Today", board_id: board.id)
 # Using board id create the new lists.
 # Retrieve their ID's in file for generating config hash.
 # Set the proper Date titles for each list.
+
+# Add option to add some sample card data.
 
 # Generate new config.yaml file
 
