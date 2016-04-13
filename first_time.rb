@@ -4,6 +4,8 @@ Bundler.require :default
 require 'trello'
 require 'yaml'
 
+require_relative 'lib/dates.rb'
+
 # TRELLO-FROG-PLANNER SETUP SCRIPT
 
 # Check for an exisitng config.yml file and ask for overrite or cancel
