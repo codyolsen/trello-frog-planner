@@ -65,6 +65,15 @@ end
 # Set the proper Date titles for each list.
 list = List.create(name: "Today", board_id: board.id)
 
+lists = {}
+lists[:today] = List.create(name: @today.strftime("Today [%A]"), board_id: board.id)
+# @tomorrow
+# @week
+# @next_week
+# @month
+# @next_month
+# @year
+# @next_year
 
 # Retrieve their ID's in file for generating config hash.
 
