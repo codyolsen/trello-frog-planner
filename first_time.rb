@@ -61,25 +61,28 @@ else
   board = boards[gets.chomp.to_i]
 end
 
+# Add option to add some example card data.
+puts "Would you like to add some example cards? Y/N"
+if gets.chomp.upcase[0] == "Y"
+  add_examples = true
+end
+
 # Using board id create the new lists.
 # Set the proper Date titles for each list.
-list = List.create(name: "Today", board_id: board.id)
-
 lists = {}
 lists[:today] = List.create(name: @today.strftime("Today [%A]"), board_id: board.id)
-# @tomorrow
-# @week
-# @next_week
-# @month
-# @next_month
-# @year
-# @next_year
+lists[:tomorrow] = List.create(name: @tomorrow.strftime("Tomorrow [%A]"), board_id: board.id)
+lists[:week] = List.create(name: "This Week [#{@week.begin.strftime "%b"} #{@week.begin.day.ordinalize} - #{@week.end.strftime "%b"} #{@week.end.day.ordinalize}]", board_id: board.id)
+lists[:next_week] = List.create(name: "Next Week [#{@next_week.begin.strftime "%b"} #{@next_week.begin.day.ordinalize} - #{@next_week.end.strftime "%b"} #{@next_week.end.day.ordinalize}]", board_id: board.id)
+lists[:month] = List.create(name: "This Month [#{@month.begin.strftime "%B"}]", board_id: board.id)
+lists[:next_month] = List.create(name: "Next Month [#{@next_month.begin.strftime "%B"}]", board_id: board.id)
+lists[:year] = List.create(name: "This Year [#{@year.begin.year}]", board_id: board.id)
+lists[:next_year] = List.create(name: "Next Year [#{@next_year.begin.year}]", board_id: board.id)
 
-# Retrieve their ID's in file for generating config hash.
-
-
-
-# Add option to add some sample card data.
+if add_examples == true
+  # Add example cards
+  
+end
 
 # Generate new config.yaml file
 
