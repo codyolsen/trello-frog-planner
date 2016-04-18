@@ -79,9 +79,32 @@ lists[:next_month] = List.create(name: "Next Month [#{@next_month.begin.strftime
 lists[:year] = List.create(name: "This Year [#{@year.begin.year}]", board_id: board.id)
 lists[:next_year] = List.create(name: "Next Year [#{@next_year.begin.year}]", board_id: board.id)
 
+
 if add_examples == true
-  # Add example cards
+  # ADD EXAMPLE CARDS
+
+  # Today
+  Card.create(name: "Take out the trash", list: lists[:today])
+  Card.create(name: "Pickup Dry Cleaning", list: lists[:today])
+  shopping_card = Card.create(name: "Go Shopping", list: lists[:today])
+  # Create checklists for shopping card
   
+  # Tomorrow
+  
+  # Week
+  
+  # Next Week
+  Card.create(name: "Pay ", list: lists[:next_week])
+
+  # Month
+  
+  # Next Month
+  Card.create(name: "Pay Monthly Bills", list: lists[:month])
+  # Create monthly bill checklist.
+  
+  # Year
+  
+  # Next Year
 end
 
 # Generate new config.yaml file
