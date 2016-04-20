@@ -90,21 +90,27 @@ if add_examples == true
   # Create checklists for shopping card
   
   # Tomorrow
-  
+  Card.create(name: "Order Flowers", list: lists[:tomorrow])
+
   # Week
+  Card.create(name: "Read 5 Chapters in Book", list: lists[:week])
+  Card.create(name: "Work out 3 Days this Week", list: lists[:week])
   
   # Next Week
-  Card.create(name: "Pay ", list: lists[:next_week])
+  Card.create(name: "Visit Family", list: lists[:next_week])
 
   # Month
+  Card.create(name: "Fix Lawn Mower", list: lists[:month])
   
   # Next Month
-  Card.create(name: "Pay Monthly Bills", list: lists[:month])
+  bill_card = Card.create(name: "Pay Monthly Bills", list: lists[:next_month])
   # Create monthly bill checklist.
   
   # Year
+  Card.create(name: "Run a Half-Marathon", list: lists[:year])
   
   # Next Year
+  Card.create(name: "Run a Marathon", list: lists[:next_year])
 end
 
 # Generate new config.yaml file
