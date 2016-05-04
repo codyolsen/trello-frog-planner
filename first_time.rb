@@ -5,6 +5,7 @@ require 'trello'
 require 'yaml'
 
 require_relative 'lib/dates.rb'
+include Trello
 
 # TRELLO-FROG-PLANNER SETUP SCRIPT
 
@@ -84,33 +85,38 @@ if add_examples == true
   # ADD EXAMPLE CARDS
 
   # Today
-  Card.create(name: "Take out the trash", list: lists[:today])
-  Card.create(name: "Pickup Dry Cleaning", list: lists[:today])
-  shopping_card = Card.create(name: "Go Shopping", list: lists[:today])
+  Card.create(name: "Take out the trash", list_id: lists[:today].id)
+  Card.create(name: "Pickup Dry Cleaning", list_id: lists[:today].id)
+  
+  # Shopping list
+  shopping_card = Card.create(name: "Go Shopping", list_id: lists[:today].id)
+  costco_cl = Checklist.create(name: "Costco", card_id: shopping_card.id)
+  home_depot_cl = Checklist.create(name: "Home Depot", card_id: shopping_card.id)
+  walmart_cl = Checklist.create(name: "Walmart", card_id: shopping_card.id)
   # Create checklists for shopping card
   
   # Tomorrow
-  Card.create(name: "Order Flowers", list: lists[:tomorrow])
+  Card.create(name: "Order Flowers", list_id: lists[:tomorrow].id)
 
   # Week
-  Card.create(name: "Read 5 Chapters in Book", list: lists[:week])
-  Card.create(name: "Work out 3 Days this Week", list: lists[:week])
+  Card.create(name: "Read 5 Chapters in Book", list_id: lists[:week].id)
+  Card.create(name: "Work out 3 Days this Week", list_id: lists[:week].id)
   
   # Next Week
-  Card.create(name: "Visit Family", list: lists[:next_week])
+  Card.create(name: "Visit Family", list_id: lists[:next_week].id)
 
   # Month
-  Card.create(name: "Fix Lawn Mower", list: lists[:month])
+  Card.create(name: "Fix Lawn Mower", list_id: lists[:month].id)
   
   # Next Month
-  bill_card = Card.create(name: "Pay Monthly Bills", list: lists[:next_month])
+  bill_card = Card.create(name: "Pay Monthly Bills", list_id: lists[:next_month].id)
   # Create monthly bill checklist.
   
   # Year
-  Card.create(name: "Run a Half-Marathon", list: lists[:year])
+  Card.create(name: "Run a Half-Marathon", list_id: lists[:year].id)
   
   # Next Year
-  Card.create(name: "Run a Marathon", list: lists[:next_year])
+  Card.create(name: "Run a Marathon", list_id: lists[:next_year].id)
 end
 
 # Generate new config.yaml file
