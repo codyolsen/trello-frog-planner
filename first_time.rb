@@ -90,9 +90,18 @@ if add_examples == true
   
   # Shopping list
   shopping_card = Card.create(name: "Go Shopping", list_id: lists[:today].id)
+  
   costco_cl = Checklist.create(name: "Costco", card_id: shopping_card.id)
+  costco_cl.add_item(name: "2 Gallons of Mayonnaise.")
+  costco_cl.add_item(name: "5 TV's")
+  costco_cl.add_item(name: "16 lbs of Strawberries")
+  costco_cl.add_item(name: "7 Foot Teddy Bear")
+  
   home_depot_cl = Checklist.create(name: "Home Depot", card_id: shopping_card.id)
+  home_depot_cl.add_item(name: "Deck Screws")
+  
   walmart_cl = Checklist.create(name: "Walmart", card_id: shopping_card.id)
+  walmart_cl.add_item(name: "Socks", checked: true)
   # Create checklists for shopping card
   
   # Tomorrow
