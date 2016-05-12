@@ -99,9 +99,14 @@ if add_examples == true
   
   home_depot_cl = Checklist.create(name: "Home Depot", card_id: shopping_card.id)
   home_depot_cl.add_item(name: "Deck Screws")
+  home_depot_cl.add_item(name: "Drill Bits")
   
   walmart_cl = Checklist.create(name: "Walmart", card_id: shopping_card.id)
   walmart_cl.add_item(name: "Socks", checked: true)
+  walmart_cl.add_item(name: "Dish Soap", checked: true)
+  walmart_cl.add_item(name: "Phone Charger", checked: true)
+  walmart_cl.add_item(name: "Yogurt")
+
   # Create checklists for shopping card
   
   # Tomorrow
