@@ -126,6 +126,9 @@ if add_examples == true
   bill_card = Card.create(name: "Pay Monthly Bills", list_id: lists[:next_month].id)
   # Create monthly bill checklist.
   monthly_bill_cl = Checklist.create(name: "Bills", card_id: bill_card.id)
+  monthly_bill_cl.add_item(name: "Electrical")
+  monthly_bill_cl.add_item(name: "Gas")
+  monthly_bill_cl.add_item(name: "Internet")
 
   # Year
   Card.create(name: "Run a Half-Marathon", list_id: lists[:year].id)
