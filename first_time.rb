@@ -16,6 +16,7 @@ if File.exist?('config.yml')
   puts "Should we continue? Y/N"
   continue = gets.chomp.upcase
   if continue[0] != "Y"
+    puts "ABORTED!"
     abort
   end
 end
