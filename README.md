@@ -12,3 +12,8 @@ IDEAS:
   - Reoccuring cards
     - Perhaps an additional board that stores template cards to be added every x days
   - End of period reports, such as nightly, weekly, monthly, etc.
+    - Every night I want an email overview report for all my todos for the day that were completed and what needs to be done.    
+    - Every morning I want an email overview report for all my todos for the day
+    - Every week I want an overview.
+    - etc.
+    - Perhaps this is just a state report based on the columns.
