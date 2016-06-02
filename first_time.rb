@@ -122,7 +122,9 @@ if add_examples == true
 
   # Month
   Card.create(name: "Fix Lawn Mower", list_id: lists[:month].id)
-  
+  Card.create(name: "Cancel Bad Internet", list_id: lists[:month].id)
+  Card.create(name: "Mail Check", list_id: lists[:month].id)
+
   # Next Month
   bill_card = Card.create(name: "Pay Monthly Bills", list_id: lists[:next_month].id)
   # Create monthly bill checklist.
