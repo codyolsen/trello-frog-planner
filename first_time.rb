@@ -63,6 +63,8 @@ else
   board = boards[gets.chomp.to_i]
 end
 
+# TODO Select/Make Template List
+
 # Add option to add some example card data.
 puts "Would you like to add some example cards? Y/N"
 if gets.chomp.upcase[0] == "Y"

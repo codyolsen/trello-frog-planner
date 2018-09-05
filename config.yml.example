@@ -12,3 +12,9 @@ trello:
     next_month: ""
     year: ""
     next_year: ""
+  template_board: ""
+    template_lists:
+      daily: ""
+      weekly: ""
+      monthly: ""
+      yearly: ""

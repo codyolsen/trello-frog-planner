@@ -1,11 +1,16 @@
 require_relative 'lib/initialize.rb'
 
+# TODO Pull each time segment into it's own file.
+
 # ON THE FIRST OF THE YEAR
 if @today == @year.begin
   # Move all next year to this year on Jan 1st
   @lists[:next_year].cards.each do | card |
       card.move_to_list @lists[:year]
   end
+
+  # Add new reoccuring yearly cards
+  # 
 
   # Update Title
   @lists[:next_year].name = "Next Year [#{@next_year.begin.year}]"
@@ -37,6 +42,10 @@ if @today == @month.begin
       end
     end
   end
+
+
+  # Add new reoccuring monthly cards
+  # 
 
   # Update Title
   @lists[:next_month].name = "Next Month [#{@next_month.begin.strftime "%B"}]"
@@ -70,6 +79,10 @@ if @today == @week.begin
     end
   end
 
+
+  # Add new reoccuring weekly cards
+  # 
+
   # Update Title
   @lists[:next_week].name = "Next Week [#{@next_week.begin.strftime "%b"} #{@next_week.begin.day.ordinalize} - #{@next_week.end.strftime "%b"} #{@next_week.end.day.ordinalize}]"
   @lists[:next_week].save
@@ -77,7 +90,7 @@ if @today == @week.begin
   @lists[:week].save
 end
 
-# ON EVERYDAY
+# ON EVERY NEW DAY
 if true
 
   # Move all tomorrow cards to today
@@ -101,6 +114,10 @@ if true
       end
     end
   end
+
+
+  # Add new reoccuring daily cards
+  # 
 
   # Update Title
   @lists[:tomorrow].name = @tomorrow.strftime("Tomorrow [%A]")
