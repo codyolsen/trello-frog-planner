@@ -1,4 +1,5 @@
 require_relative 'lib/initialize.rb'
+require_relative 'lib/dates.rb'
 
 # TODO Pull each time segment into it's own file.
 
@@ -117,7 +118,15 @@ if true
 
 
   # Add new reoccuring daily cards
-  # 
+  @template_lists[:daily].cards.each do |card|
+    byebug
+    Trello::Card.create(
+      list_id: @lists[:today].id,
+      name: @today.strftime("#{card.name} [%A]"),
+      source_card_id: card.id,
+      source_card_properties: :all
+    )
+  end
 
   # Update Title
   @lists[:tomorrow].name = @tomorrow.strftime("Tomorrow [%A]")
