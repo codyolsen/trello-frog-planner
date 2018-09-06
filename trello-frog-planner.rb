@@ -11,7 +11,16 @@ if @today == @year.begin
   end
 
   # Add new reoccuring yearly cards
-  # 
+  @template_lists[:yearly].cards.each do |card|
+    # Trello::CustomFieldItem.find(model.id)
+
+    Trello::Card.create(
+      list_id: @lists[:year].id,
+      name: @today.strftime("#{card.name} [#{@month.begin.strftime "%B"}]"),
+      source_card_id: card.id,
+      source_card_properties: :all
+    )
+  end
 
   # Update Title
   @lists[:next_year].name = "Next Year [#{@next_year.begin.year}]"
@@ -46,7 +55,16 @@ if @today == @month.begin
 
 
   # Add new reoccuring monthly cards
-  # 
+  @template_lists[:monthly].cards.each do |card|
+    # Trello::CustomFieldItem.find(model.id)
+
+    Trello::Card.create(
+      list_id: @lists[:month].id,
+      name: @today.strftime("#{card.name} [#{@month.begin.strftime "%B"}]"),
+      source_card_id: card.id,
+      source_card_properties: :all
+    )
+  end
 
   # Update Title
   @lists[:next_month].name = "Next Month [#{@next_month.begin.strftime "%B"}]"
@@ -82,7 +100,17 @@ if @today == @week.begin
 
 
   # Add new reoccuring weekly cards
-  # 
+  @template_lists[:weekly].cards.each do |card|
+    # Trello::CustomFieldItem.find(model.id)
+
+    Trello::Card.create(
+      list_id: @lists[:week].id,
+      name: @today.strftime("#{card.name} [#{@week.begin.strftime "%b"} #{@week.begin.day.ordinalize} - #{@week.end.strftime "%b"} #{@week.end.day.ordinalize}]"),
+      source_card_id: card.id,
+      source_card_properties: :all
+    )
+  end
+
 
   # Update Title
   @lists[:next_week].name = "Next Week [#{@next_week.begin.strftime "%b"} #{@next_week.begin.day.ordinalize} - #{@next_week.end.strftime "%b"} #{@next_week.end.day.ordinalize}]"
@@ -92,50 +120,49 @@ if @today == @week.begin
 end
 
 # ON EVERY NEW DAY
-if true
 
-  # Move all tomorrow cards to today
-  @lists[:tomorrow].cards.each do | card |
-    card.move_to_list @lists[:today]
-  end
+# Move all tomorrow cards to today
+@lists[:tomorrow].cards.each do | card |
+  card.move_to_list @lists[:today]
+end
 
-  # Iterate through the week and see if there are any due cards to move
-  @lists[:week].cards.each do | card |
-    # Set Due date
-    if card.due
-      due_date = card.due.beginning_of_day
+# Iterate through the week and see if there are any due cards to move
+@lists[:week].cards.each do | card |
+  # Set Due date
+  if card.due
+    due_date = card.due.beginning_of_day
 
-      # Move due to today
-      if due_date <= @today 
-        card.move_to_list @lists[:today]
-        
-      # Move due cards to tomorrow
-      elsif due_date <= @tomorrow
-        card.move_to_list @lists[:tomorrow]
-      end
+    # Move due to today
+    if due_date <= @today 
+      card.move_to_list @lists[:today]
+      
+    # Move due cards to tomorrow
+    elsif due_date <= @tomorrow
+      card.move_to_list @lists[:tomorrow]
     end
   end
+end
 
 
-  # Add new reoccuring daily cards
-  @template_lists[:daily].cards.each do |card|
-    byebug
-    Trello::Card.create(
-      list_id: @lists[:today].id,
-      name: @today.strftime("#{card.name} [%A]"),
-      source_card_id: card.id,
-      source_card_properties: :all
-    )
-  end
+# Add new reoccuring daily cards
+@template_lists[:daily].cards.each do |card|
+  # Trello::CustomFieldItem.find(model.id)
 
-  # Update Title
-  @lists[:tomorrow].name = @tomorrow.strftime("Tomorrow [%A]")
-  @lists[:tomorrow].save
-  @lists[:today].name = @today.strftime("Today [%A]")
-  @lists[:today].save
+  Trello::Card.create(
+    list_id: @lists[:today].id,
+    name: @today.strftime("#{card.name} [%A]"),
+    source_card_id: card.id,
+    source_card_properties: :all
+  )
+end
 
-  # Archive Cards from the done list.
-  @lists[:done].cards.each do | card |
-    card.close!
-  end
+# Update Title
+@lists[:tomorrow].name = @tomorrow.strftime("Tomorrow [%A]")
+@lists[:tomorrow].save
+@lists[:today].name = @today.strftime("Today [%A]")
+@lists[:today].save
+
+# Archive Cards from the done list.
+@lists[:done].cards.each do | card |
+  card.close!
 end
