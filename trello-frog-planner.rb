@@ -3,9 +3,14 @@ require_relative 'lib/dates.rb'
 
 # TODO Pull each time segment into it's own file.
 
-def add_templates(source_list, target_list, card_name_template)
+def add_templates(source_list, target_list, card_name_template, time_index)
   # Trello::CustomFieldItem.find(model.id)
   source_list.cards.each do |card|
+    if time_index
+      time_indicies = card.custom_field_items.find { |field| field.custom_field.name == "time-indicies" }
+      unless time_indicies.value["text"].split(',').include?(time_index) then return end
+    end
+
     Trello::Card.create(
       list_id: target_list.id,
       name: card_name_template % {card_name: card.name},
@@ -37,7 +42,7 @@ def process_cards_by_due_date(list, pairs)
           break
         end
       end
-      
+
     end
   end
 end
@@ -108,7 +113,7 @@ move_list_cards(@lists[:tomorrow], @lists[:today])
 process_cards_by_due_date(@lists[:week], {@today => @lists[:today], @tomorrow => @lists[:tomorrow]})
 
 # Templates
-add_templates(@template_lists[:daily], @lists[:today], @today.strftime("%{card_name} [%A]"))
+add_templates( @template_lists[:daily], @lists[:today], @today.strftime("%{card_name} [%A]"), @today.strftime("%w") )
 
 # Update Title
 update_titles({
