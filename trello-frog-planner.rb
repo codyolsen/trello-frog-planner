@@ -23,6 +23,25 @@ def update_titles(lists)
   end
 end
 
+# Hash pair set with key = date_limit, value = destination list
+# Rules are evaluated top down
+def process_cards_by_due_date(list, pairs)
+  list.cards.each do |card|
+    if card.due
+      card_due_date = card.due.beginning_of_day
+
+      # Process list rules
+      pairs.each do | date_limit, list |
+        if card_due_date <= date_limit
+          card.move_to_list list
+          break
+        end
+      end
+      
+    end
+  end
+end
+
 def move_list_cards(source_list, target_list)
   source_list.cards.each do | card |
     card.move_to_list target_list
@@ -38,10 +57,10 @@ if @today == @year.begin
   add_templates(@template_lists[:yearly], @lists[:year], "%{card_name} [#{@year.begin.year}]")
 
   # Update Titles
-  update_titles(
-    @lists[:next_year]: "Next Year [#{@next_year.begin.year}]",
-    @lists[:year]: "This Year [#{@year.begin.year}]",
-  )
+  update_titles({
+    @lists[:next_year]  => "Next Year [#{@next_year.begin.year}]",
+    @lists[:year]       => "This Year [#{@year.begin.year}]"
+  })
 end
 
 # ON THE FIRST OF THE MONTH
@@ -50,106 +69,53 @@ if @today == @month.begin
   move_list_cards(@lists[:next_month], @lists[:month])
 
   # Check all month cards for any due dates for weeks
-  @lists[:year].cards.each do | card |
-    # Set Due date
-    if card.due
-      due_date = card.due.beginning_of_day
-
-      # Move due to today
-      if due_date <= @next_month.end 
-        card.move_to_list @lists[:next_month]
-
-      # Move due cards to tomorrow
-      elsif due_date <= @month.end 
-        card.move_to_list @lists[:month]
-      end
-    end
-  end
-
+  process_cards_by_due_date(@lists[:year], {@month.end => @lists[:month]}, @next_month.end => @lists[:next_month] )
 
   # Add new reoccuring monthly cards
-  @template_lists[:monthly].cards.each do |card|
-    # Trello::CustomFieldItem.find(model.id)
+  add_templates(@template_lists[:monthly], @lists[:month], "%{card_name} [#{@month.begin.strftime "%B"}]")
 
-    Trello::Card.create(
-      list_id: @lists[:month].id,
-      name: @today.strftime("#{card.name} [#{@month.begin.strftime "%B"}]"),
-      source_card_id: card.id,
-      source_card_properties: :all
-    )
-  end
-
-  # Update Title
-  @lists[:next_month].name = "Next Month [#{@next_month.begin.strftime "%B"}]"
-  @lists[:next_month].save
-  @lists[:month].name = "This Month [#{@month.begin.strftime "%B"}]"
-  @lists[:month].save
+  # Update Titles
+  update_titles({
+    @lists[:next_month] => "Next Month [#{@next_month.begin.strftime "%B"}]",
+    @lists[:month] => "This Month [#{@month.begin.strftime "%B"}]"
+  })
 end
 
 # ON THE FIRST OF THE WEEK
 if @today == @week.begin
 
   # Move all cards from next week to this week
-  move_list_cards(@lists[:next_week], @lists[:week])
+  move_list_cards( @lists[:next_week], @lists[:week] )
 
   # Check all month cards for any due dates for weeks
-  @lists[:month].cards.each do | card |
-    # Set Due date
-    if card.due
-      due_date = card.due.beginning_of_day
-
-      # Move due cards to this week
-      if due_date <= @week.end
-        card.move_to_list @lists[:week]
-      
-      # Move due to next week
-      elsif due_date <= @next_week.end 
-        card.move_to_list @lists[:next_week]
-      end
-    end
-  end
+  process_cards_by_due_date( @lists[:month], {@week.end => @lists[:week], @next_week.end => @lists[:next_week]} )
 
   # Add new reoccuring weekly cards
   add_templates(@template_lists[:weekly], @lists[:week], "%{card_name} [#{@week.begin.strftime "%b"} #{@week.begin.day.ordinalize} - #{@week.end.strftime "%b"} #{@week.end.day.ordinalize}]")
 
   # Update Title
-  @lists[:next_week].name = "Next Week [#{@next_week.begin.strftime "%b"} #{@next_week.begin.day.ordinalize} - #{@next_week.end.strftime "%b"} #{@next_week.end.day.ordinalize}]"
-  @lists[:next_week].save
-  @lists[:week].name = "This Week [#{@week.begin.strftime "%b"} #{@week.begin.day.ordinalize} - #{@week.end.strftime "%b"} #{@week.end.day.ordinalize}]"
-  @lists[:week].save
+  update_titles({
+    @lists[:next_week]  => "Next Week [#{@next_week.begin.strftime "%b"} #{@next_week.begin.day.ordinalize} - #{@next_week.end.strftime "%b"} #{@next_week.end.day.ordinalize}]",
+    @lists[:week]       => "This Week [#{@week.begin.strftime "%b"} #{@week.begin.day.ordinalize} - #{@week.end.strftime "%b"} #{@week.end.day.ordinalize}]"
+  })
 end
 
 # ON EVERY NEW DAY
-
 # Move all tomorrow cards to today
-@lists[:tomorrow].cards.each do | card |
-  card.move_to_list @lists[:today]
-end
+move_list_cards(@lists[:tomorrow], @lists[:today])
 
 # Iterate through the week and see if there are any due cards to move
-@lists[:week].cards.each do | card |
-  # Set Due date
-  if card.due
-    due_date = card.due.beginning_of_day
+process_cards_by_due_date(@lists[:week], {@today => @lists[:today], @tomorrow => @lists[:tomorrow]})
 
-    # Move due to today
-    if due_date <= @today 
-      card.move_to_list @lists[:today]
-      
-    # Move due cards to tomorrow
-    elsif due_date <= @tomorrow
-      card.move_to_list @lists[:tomorrow]
-    end
-  end
-end
-
+# Templates
 add_templates(@template_lists[:daily], @lists[:today], @today.strftime("%{card_name} [%A]"))
 
 # Update Title
-@lists[:tomorrow].name = @tomorrow.strftime("Tomorrow [%A]")
-@lists[:tomorrow].save
-@lists[:today].name = @today.strftime("Today [%A]")
-@lists[:today].save
+update_titles({
+  @lists[:tomorrow] => @tomorrow.strftime("Tomorrow [%A]"),
+  @lists[:today]    => @today.strftime("Today [%A]")
+})
+
 
 # Archive Cards from the done list.
 @lists[:done].cards.each do | card |
