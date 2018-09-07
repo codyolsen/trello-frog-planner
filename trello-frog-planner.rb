@@ -3,38 +3,51 @@ require_relative 'lib/dates.rb'
 
 # TODO Pull each time segment into it's own file.
 
-# ON THE FIRST OF THE YEAR
-if @today == @year.begin
-  # Move all next year to this year on Jan 1st
-  @lists[:next_year].cards.each do | card |
-      card.move_to_list @lists[:year]
-  end
-
-  # Add new reoccuring yearly cards
-  @template_lists[:yearly].cards.each do |card|
-    # Trello::CustomFieldItem.find(model.id)
-
+def add_templates(source_list, target_list, card_name_template)
+  # Trello::CustomFieldItem.find(model.id)
+  source_list.cards.each do |card|
     Trello::Card.create(
-      list_id: @lists[:year].id,
-      name: @today.strftime("#{card.name} [#{@month.begin.strftime "%B"}]"),
+      list_id: target_list.id,
+      name: card_name_template % {card_name: card.name},
       source_card_id: card.id,
       source_card_properties: :all
     )
   end
+end
 
-  # Update Title
-  @lists[:next_year].name = "Next Year [#{@next_year.begin.year}]"
-  @lists[:next_year].save
-  @lists[:year].name = "This Year [#{@year.begin.year}]"
-  @lists[:year].save
+# Hash of lists and their new titles {List => String, ...}
+def update_titles(lists)
+  lists.each do |list, title|
+    list.name = title
+    list.save
+  end
+end
+
+def move_list_cards(source_list, target_list)
+  source_list.cards.each do | card |
+    card.move_to_list target_list
+  end
+end
+
+# ON THE FIRST OF THE YEAR
+if @today == @year.begin
+  # Move all next year to this year on Jan 1st
+  move_list_cards(@lists[:next_year], @lists[:year])
+
+  # Add new reoccuring yearly cards
+  add_templates(@template_lists[:yearly], @lists[:year], "%{card_name} [#{@year.begin.year}]")
+
+  # Update Titles
+  update_titles(
+    @lists[:next_year]: "Next Year [#{@next_year.begin.year}]",
+    @lists[:year]: "This Year [#{@year.begin.year}]",
+  )
 end
 
 # ON THE FIRST OF THE MONTH
 if @today == @month.begin
   # Move all cards from next month to this month
-  @lists[:next_month].cards.each do | card |
-    card.move_to_list @lists[:month]
-  end
+  move_list_cards(@lists[:next_month], @lists[:month])
 
   # Check all month cards for any due dates for weeks
   @lists[:year].cards.each do | card |
@@ -77,9 +90,7 @@ end
 if @today == @week.begin
 
   # Move all cards from next week to this week
-  @lists[:next_week].cards.each do | card |
-    card.move_to_list @lists[:week]
-  end
+  move_list_cards(@lists[:next_week], @lists[:week])
 
   # Check all month cards for any due dates for weeks
   @lists[:month].cards.each do | card |
@@ -98,19 +109,8 @@ if @today == @week.begin
     end
   end
 
-
   # Add new reoccuring weekly cards
-  @template_lists[:weekly].cards.each do |card|
-    # Trello::CustomFieldItem.find(model.id)
-
-    Trello::Card.create(
-      list_id: @lists[:week].id,
-      name: @today.strftime("#{card.name} [#{@week.begin.strftime "%b"} #{@week.begin.day.ordinalize} - #{@week.end.strftime "%b"} #{@week.end.day.ordinalize}]"),
-      source_card_id: card.id,
-      source_card_properties: :all
-    )
-  end
-
+  add_templates(@template_lists[:weekly], @lists[:week], "%{card_name} [#{@week.begin.strftime "%b"} #{@week.begin.day.ordinalize} - #{@week.end.strftime "%b"} #{@week.end.day.ordinalize}]")
 
   # Update Title
   @lists[:next_week].name = "Next Week [#{@next_week.begin.strftime "%b"} #{@next_week.begin.day.ordinalize} - #{@next_week.end.strftime "%b"} #{@next_week.end.day.ordinalize}]"
@@ -143,18 +143,7 @@ end
   end
 end
 
-
-# Add new reoccuring daily cards
-@template_lists[:daily].cards.each do |card|
-  # Trello::CustomFieldItem.find(model.id)
-
-  Trello::Card.create(
-    list_id: @lists[:today].id,
-    name: @today.strftime("#{card.name} [%A]"),
-    source_card_id: card.id,
-    source_card_properties: :all
-  )
-end
+add_templates(@template_lists[:daily], @lists[:today], @today.strftime("%{card_name} [%A]"))
 
 # Update Title
 @lists[:tomorrow].name = @tomorrow.strftime("Tomorrow [%A]")
