@@ -15,19 +15,20 @@ def add_templates( today, source_list, target_list, card_name_template, due_date
       end
     end
 
+    new_due_date = ""
     if card.due
-      # new_epoch = today.utc.to_i + (card.due.to_i % 86400)
-      # new_due_date = Time.at(new_epoch)
-      # .iso8601
-      # byebug
+      new_epoch = today.utc.to_i + ((card.due.to_i - today.to_i) % 86400)
+      new_due_date = Time.at(new_epoch).iso8601
     end
+
+    # byebug
 
     Trello::Card.create(
       list_id: target_list.id,
       name: card_name_template % {card_name: card.name},
-      due: new_due_date || "",
+      due: new_due_date,
       source_card_id: card.id,
-      source_card_properties: :all
+      source_card_properties: ["attachments", "checklists", "labels", "stickers"]
     )
   end
 end
