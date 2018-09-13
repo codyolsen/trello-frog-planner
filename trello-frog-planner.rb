@@ -7,8 +7,7 @@ def add_templates( today, source_list, target_list, card_name_template, due_date
   # Trello::CustomFieldItem.find(model.id)
   
   source_list.cards.each do |card|
-    if time_index
-      time_indicies = card.custom_field_items.find { |field| field.custom_field.name == "time-indicies" }
+    if time_index && (time_indicies = card.custom_field_items.find { |field| field.custom_field.name == "time-indicies" })
       # If the indicies are not empty, and they don't match the required index, bail out. Don't add this card.
       if !time_indicies.value["text"].empty? && !time_indicies.value["text"].split(',').include?(time_index) 
         return

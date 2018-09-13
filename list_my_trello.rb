@@ -28,12 +28,12 @@ Board.all.each do | board |
   puts "#{board.name}: #{board.id.cyan}"
   puts "LISTS:"
   board.lists.each do | list |
-    puts "\t#{list.name}: #{list.id.green}"
+    puts "\t#{list.name.downcase}: #{list.id.green}"
   end
   unless board.custom_fields.empty?
     puts "CUSTOM FIELDS:"
     board.custom_fields.each do | item |
-      puts "\t#{item.name}: #{item.id.green}"
+      puts "\t#{item.name.downcase}: #{item.id.green}"
     end
   end
   puts "------------".red
