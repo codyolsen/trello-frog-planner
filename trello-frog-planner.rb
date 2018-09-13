@@ -21,8 +21,6 @@ def add_templates( today, source_list, target_list, card_name_template, due_date
       new_due_date = Time.at(new_epoch).iso8601
     end
 
-    # byebug
-
     Trello::Card.create(
       list_id: target_list.id,
       name: card_name_template % {card_name: card.name},
