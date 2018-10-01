@@ -3,7 +3,7 @@ require_relative 'lib/dates.rb'
 
 # TODO Pull each time segment into it's own file.
 
-def add_templates( today, source_list, target_list, card_name_template, due_date, time_index)
+def add_templates( today, source_list, target_list, card_name_template, time_index = nil)
   # Trello::CustomFieldItem.find(model.id)
   
   source_list.cards.each do |card|
@@ -123,7 +123,7 @@ move_list_cards(@lists[:tomorrow], @lists[:today])
 process_cards_by_due_date(@lists[:week], {@today => @lists[:today], @tomorrow => @lists[:tomorrow]})
 
 # Templates
-add_templates( @today, @template_lists[:daily], @lists[:today], @today.strftime("%{card_name} [%A]"), @today, @today.strftime("%w") )
+add_templates( @today, @template_lists[:daily], @lists[:today], @today.strftime("%{card_name} [%A]"), @today.strftime("%w") )
 
 # Update Title
 update_titles(
