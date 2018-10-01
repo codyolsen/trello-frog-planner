@@ -84,7 +84,7 @@ if @today == @month.begin
   move_list_cards(@lists[:next_month], @lists[:month])
 
   # Check all month cards for any due dates for weeks
-  process_cards_by_due_date(@lists[:year], {@month.end => @lists[:month]}, @next_month.end => @lists[:next_month] )
+  process_cards_by_due_date(@lists[:year], {@month.end => @lists[:month], @next_month.end => @lists[:next_month]} )
 
   # Add new reoccuring monthly cards
   add_templates( @today, @template_lists[:monthly], @lists[:month], "%{card_name} [#{@month.begin.strftime "%B"}]")
