@@ -33,7 +33,10 @@ end
 def clean_templates(source_list, target_list = @lists[:done])
   source_list.cards.each do |card|
     if card.name.match(/\[\S+\]$/)
-      card.archive
+      card.update_fields({
+        closed: true,
+        list_id: target_list.id
+      })
     end
   end
 end
