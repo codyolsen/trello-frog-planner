@@ -37,6 +37,7 @@ def clean_templates(source_list, target_list = @lists[:done])
         closed: true,
         list_id: target_list.id
       })
+      card.update!
     end
   end
 end
