@@ -30,6 +30,14 @@ def add_templates( today, source_list, target_list, card_name_template, time_ind
   end
 end
 
+def clean_templates(source_list, target_list = @lists[:done])
+  source_list.cards.each do |card|
+    if card.name.match(/\[\S+\]$/)
+      card.archive
+    end
+  end
+end
+
 # Hash of lists and their new titles {List => String, ...}
 def update_titles(lists)
   lists.each do |list, title|
@@ -116,6 +124,9 @@ if @today == @week.begin
 end
 
 # ON EVERY NEW DAY
+# Clean stale template cards
+clean_templates(@lists[:today])
+
 # Move all tomorrow cards to today
 move_list_cards(@lists[:tomorrow], @lists[:today])
 
